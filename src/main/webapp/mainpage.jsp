@@ -33,14 +33,18 @@
 			<div><strong>> 영업점</strong></div>
 			<form action="mainpage.jsp" method="get">
 				<select name="branchId">
-					<% for (BranchBean branch : branchList) { %>
-			            <option value="<%= branch.getBranchId() %>">
+					<% for (BranchBean branch : branchList) { 
+						String currentBranchId = Integer.toString(branch.getBranchId());
+						boolean isSelected = currentBranchId.equals(branchId);
+					%>
+						
+			            <option value="<%= branch.getBranchId() %>" <%= isSelected ? "selected" : ""%>>
 			                <%= branch.getBranchName() %>
 			            </option>
 			        <% } %>
 				</select>
 				<button type="submit">조회</button>
-			</form>
+			</frm>
 			
 		</div>
 		
@@ -87,18 +91,18 @@
 		<div class="detail_table">
 			<table>
 				<tr>
-					<td class="table_label">고객번호</td>
-					<td class="table_value">1</td>
+					<td class="table_label">지점번호</td>
+					<td class="table_value"><input type="text" value="<%= branchId == null ? 1 : branchId %>" readonly></td>
 					<td class="table_label">성명</td>
-					<td class="table_value">홍길동</td>
+					<td class="table_value"><input type="text"></td>
 					<td class="table_label">전화번호</td>
-					<td class="table_value">01011111111</td>
+					<td class="table_value"><input type="text"></td>
 				</tr>
 				<tr>
 					<td class="table_label">주소</td>
-					<td class="table_value">경기도 고양시</td>
+					<td class="table_value"><input type="text"></td>
 					<td class="table_label">상세주소</td>
-					<td class="table_value" colspan="3">000동 000호</td>
+					<td class="table_value" colspan="3"><input type="text"></td>
 				</tr>
 			</table>
 		</div>
