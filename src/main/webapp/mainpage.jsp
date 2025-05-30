@@ -1,23 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.*, bean.BoardDBBean, bean.BranchBean, bean.CustomerBean" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page
+	import="java.util.*, bean.BoardDBBean, bean.BranchBean, bean.CustomerBean"%>
 <%
-    // DAO 객체 얻기
-    BoardDBBean dao = BoardDBBean.getInstance();
+// DAO 객체 얻기
+BoardDBBean dao = BoardDBBean.getInstance();
 
-    // 영업점 리스트 조회
-    List<BranchBean> branchList = dao.getBranchList();
+// 영업점 리스트 조회
+List<BranchBean> branchList = dao.getBranchList();
 %>
 
 <%
-	request.setCharacterEncoding("utf-8");
-	// select 태그를 통해 받은 데이터 저장
-	String branchId = request.getParameter("branchId");
-	
-	List<CustomerBean> customerList = new ArrayList<>(); // ← 먼저 선언
-	if (branchId != null && !branchId.isEmpty()) {
-		customerList = dao.getCustomersByBranch(Integer.parseInt(branchId));
-	} 
-	
+request.setCharacterEncoding("utf-8");
+// select 태그를 통해 받은 데이터 저장
+String branchId = request.getParameter("branchId");
+
+List<CustomerBean> customerList = new ArrayList<>();
+if (branchId != null && !branchId.isEmpty()) {
+	customerList = dao.getCustomersByBranch(Integer.parseInt(branchId));
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -29,27 +30,33 @@
 <body>
 	<h2>영업점별 고객정보</h2>
 	<header class="branch">
-		<div class="dropdown_div">
-			<div><strong>> 영업점</strong></div>
-			<form action="mainpage.jsp" method="get">
+		<form action="mainpage.jsp" method="get">
+			<div class="dropdown_div">
+				<div>
+					<strong>> 영업점</strong>
+				</div>
 				<select name="branchId">
-					<% for (BranchBean branch : branchList) { 
+					<%
+					for (BranchBean branch : branchList) {
 						String currentBranchId = Integer.toString(branch.getBranchId());
 						boolean isSelected = currentBranchId.equals(branchId);
 					%>
-						
-			            <option value="<%= branch.getBranchId() %>" <%= isSelected ? "selected" : ""%>>
-			                <%= branch.getBranchName() %>
-			            </option>
-			        <% } %>
+
+					<option value="<%=branch.getBranchId()%>"
+						<%=isSelected ? "selected" : ""%>>
+						<%=branch.getBranchName()%>
+					</option>
+					<%
+					}
+					%>
 				</select>
 				<button type="submit">조회</button>
-			</frm>
-			
-		</div>
-		
+
+
+			</div>
+		</form>
 	</header>
-	
+
 	<main class="main">
 		<table>
 			<thead>
@@ -64,48 +71,68 @@
 				</tr>
 			</thead>
 			<tbody>
-			<% for (CustomerBean customer : customerList) { %>
-				<tr class="table_row">
-					<td><%= customer.getCustomerId() %></td>
-					<td><%= customer.getName() %></td>
-					<td><%= customer.getPhone() %></td>
-					<td><%= customer.getEmail() %></td>
-					<td><%= customer.getAddress() %></td>
-					<td><%= customer.getAddressDetail() %></td>
-					<td><%= customer.getRegisteredDate() %></td>
+				<%
+				for (CustomerBean customer : customerList) {
+				%>
+				<tr class="table_row" data-id="<%=customer.getCustomerId()%>"
+					data-name="<%=customer.getName()%>"
+					data-phone="<%=customer.getPhone()%>"
+					data-email="<%=customer.getEmail()%>"
+					data-address="<%=customer.getAddress()%>"
+					data-address-detail="<%=customer.getAddressDetail()%>">
+					<td><%=customer.getCustomerId()%></td>
+					<td><%=customer.getName()%></td>
+					<td><%=customer.getPhone()%></td>
+					<td><%=customer.getEmail()%></td>
+					<td><%=customer.getAddress()%></td>
+					<td><%=customer.getAddressDetail()%></td>
+					<td><%=customer.getRegisteredDate()%></td>
 				</tr>
-			<% } %>
+				<%
+				}
+				%>
 			</tbody>
 		</table>
 	</main>
-	                                               
-	<footer>
-		<div class="detail_div">
-			<div><strong>고객상세정보</strong></div>
-			<div>
-				<button>추가</button>
-				<button>수정</button>
-				<button>삭제</button>
+
+	<form action="mainpage.jsp" method="post" name="writeForm">
+		<footer>
+			<div class="detail_div">
+				<div>
+					<strong>고객상세정보</strong>
+				</div>
+				<div>
+					<button type="submit">추가</button>
+					<button>수정</button>
+					<button>삭제</button>
+				</div>
 			</div>
-		</div>
-		<div class="detail_table">
-			<table>
-				<tr>
-					<td class="table_label">지점번호</td>
-					<td class="table_value"><input type="text" value="<%= branchId == null ? 1 : branchId %>" readonly></td>
-					<td class="table_label">성명</td>
-					<td class="table_value"><input type="text"></td>
-					<td class="table_label">전화번호</td>
-					<td class="table_value"><input type="text"></td>
-				</tr>
-				<tr>
-					<td class="table_label">주소</td>
-					<td class="table_value"><input type="text"></td>
-					<td class="table_label">상세주소</td>
-					<td class="table_value" colspan="3"><input type="text"></td>
-				</tr>
-			</table>
-		</div>
-	</footer>
+			<div class="detail_table">
+				<input type="hidden" name="customerId" id="customerId">
+				<table>
+					<tr>
+						<td class="table_label">성명</td>
+						<td class="table_value"><input type="text" name="name"
+							id="name"></td>
+						<td class="table_label">전화번호</td>
+						<td class="table_value"><input type="text" name="phone"
+							id="phone"></td>
+						<td class="table_label">이메일</td>
+						<td class="table_value"><input type="text" name="email"
+							id="email"></td>
+					</tr>
+					<tr>
+						<td class="table_label">주소</td>
+						<td class="table_value"><input type="text" name="address"
+							id="address"></td>
+						<td class="table_label">상세주소</td>
+						<td class="table_value" colspan="3"><input type="text"
+							name="address_detail" id="addressDetail"></td>
+					</tr>
+				</table>
+			</div>
+		</footer>
+	</form>
+	<script src="script.js"></script>
 </body>
 </html>
