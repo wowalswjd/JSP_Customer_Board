@@ -46,3 +46,9 @@ VALUES("홍홍홍", "01022222222", "bbb@example.com", "경기도 부천시", "20
 
 INSERT INTO customer(name, phone, email, address, address_detail, registered_date, register_id, updated_date, updater_id, branch_id)
 VALUES("홍홍홍", "01022222222", "bbb@example.com", "경기도 부천시", "200동 200호", NOW(), "honghong",  NOW(), "honghong", 3);
+
+INSERT INTO customer(name, phone, email, address, address_detail, registered_date, register_id, updated_date, updater_id, branch_id)
+VALUES("이부산", "01044444444", "ddd@example.com", "부산광역시", "400동 400호", NOW(), "busan",  NOW(), "busan", 4);
+
+INSERT INTO customer(name, phone, email, address, address_detail, registered_date, register_id, updated_date, updater_id, branch_id)
+VALUES("김가산", "01099999999", "ccc@example.com", "서울광역시 금천구 가산동", "가산어반워크 5층", NOW(), "gasan",  NOW(), "gasan", 1);

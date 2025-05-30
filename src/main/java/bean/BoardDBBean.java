@@ -118,6 +118,38 @@ public class BoardDBBean {
 	   return customerList;
 	   
 	}
+   
+   public void updateCustomerInfo(int customerId, String name, String phone, String email,
+           String address, String addressDetail) throws Exception {
+	   Connection conn = null;
+	   PreparedStatement pstmt = null;
+	   ResultSet rs = null;
+	   
+	   try {
+		   // DB 연결
+	       conn = getConnection();
+
+           // SQL 작성 및 실행
+           String sql = "UPDATE customer SET name = ?, phone = ?, email = ?, address = ?, address_detail = ?, updated_date=NOW() WHERE customer_id = ?";
+           
+           pstmt = conn.prepareStatement(sql);
+           pstmt.setString(1, name);
+           pstmt.setString(2, phone);
+           pstmt.setString(3, email);
+           pstmt.setString(4, address);
+           pstmt.setString(5, addressDetail);
+           pstmt.setInt(6, customerId);
+
+           pstmt.executeUpdate(); // 실행
+	   } catch(Exception ex) {
+		   ex.printStackTrace();
+	   } finally {
+		   if (rs != null) try {rs.close();} catch(SQLException ex) {}
+		   if (pstmt != null) try {pstmt.close();} catch(SQLException ex) {}
+		   if (conn != null) try {conn.close();} catch(SQLException ex) {}
+	   }
+	   
+   }
 
    
 }

@@ -20,6 +20,29 @@ if (branchId != null && !branchId.isEmpty()) {
 	customerList = dao.getCustomersByBranch(Integer.parseInt(branchId));
 }
 %>
+
+<%
+if ("POST".equalsIgnoreCase(request.getMethod())) {
+	String action = request.getParameter("action");
+
+	if ("insert".equals(action)) {
+		// insert 처리
+	} else if ("update".equals(action)) {
+		// update 처리
+		int customerId = Integer.parseInt(request.getParameter("customerId"));
+		String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		String email = request.getParameter("email");
+		String address = request.getParameter("address");
+		String addressDetail = request.getParameter("address_detail");
+
+		dao.updateCustomerInfo(customerId, name, phone, email, address, addressDetail);
+	} else if ("delete".equals(action)) {
+		// delete 처리
+	}
+}
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,9 +125,9 @@ if (branchId != null && !branchId.isEmpty()) {
 					<strong>고객상세정보</strong>
 				</div>
 				<div>
-					<button type="submit">추가</button>
-					<button>수정</button>
-					<button>삭제</button>
+					<button type="submit" name="action" value="insert">추가</button>
+					<button type="submit" name="action" value="update">수정</button>
+					<button type="submit" name="action" value="delete">삭제</button>
 				</div>
 			</div>
 			<div class="detail_table">
