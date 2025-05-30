@@ -2,6 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@ page
 	import="java.util.*, bean.BoardDBBean, bean.BranchBean, bean.CustomerBean"%>
+<%@ page import="java.io.BufferedReader" %>
+<%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="org.json.simple.parser.JSONParser" %>
+<%@ page import="org.json.simple.parser.ParseException" %>
+<%@ page import="java.io.*" %>
+
 <%
 // DAO 객체 얻기
 BoardDBBean dao = BoardDBBean.getInstance();
@@ -22,7 +28,7 @@ if (branchId != null && !branchId.isEmpty()) {
 %>
 
 <%
-if ("POST".equalsIgnoreCase(request.getMethod())) {
+/* if ("POST".equalsIgnoreCase(request.getMethod())) {
 	String action = request.getParameter("action");
 
 	if ("insert".equals(action)) {
@@ -40,7 +46,46 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 	} else if ("delete".equals(action)) {
 		// delete 처리
 	}
-}
+} */
+	// POST 요청일 경우 JSON 받기
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        BufferedReader reader = request.getReader();
+        StringBuilder sb = new StringBuilder();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(sb.toString());
+
+            String action = (String) json.get("action");
+
+            if ("update".equals(action)) {
+                int customerId = Integer.parseInt((String) json.get("customerId"));
+                String name = (String) json.get("name");
+                String phone = (String) json.get("phone");
+                String email = (String) json.get("email");
+                String address = (String) json.get("address");
+                String addressDetail = (String) json.get("address_detail");
+
+                dao.updateCustomerInfo(customerId, name, phone, email, address, addressDetail);
+
+                // script.js (update 버튼 클릭 이벤트)에 결과 return해주기
+                response.setContentType("application/json");
+                out.print("{\"message\":\"success\"}");
+                return;  // 더 이상 JSP 렌더링하지 않음
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            response.setContentType("application/json");
+            out.print("{\"message\":\"JSON 파싱 오류\"}");
+            return;
+        }
+    }
 %>
 
 <!DOCTYPE html>
@@ -118,44 +163,42 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 		</table>
 	</main>
 
-	<form action="mainpage.jsp" method="post" name="writeForm">
-		<footer>
-			<div class="detail_div">
-				<div>
-					<strong>고객상세정보</strong>
-				</div>
-				<div>
-					<button type="submit" name="action" value="insert">추가</button>
-					<button type="submit" name="action" value="update">수정</button>
-					<button type="submit" name="action" value="delete">삭제</button>
-				</div>
+	<footer>
+		<div class="detail_div">
+			<div>
+				<strong>고객상세정보</strong>
 			</div>
-			<div class="detail_table">
-				<input type="hidden" name="customerId" id="customerId">
-				<table>
-					<tr>
-						<td class="table_label">성명</td>
-						<td class="table_value"><input type="text" name="name"
-							id="name"></td>
-						<td class="table_label">전화번호</td>
-						<td class="table_value"><input type="text" name="phone"
-							id="phone"></td>
-						<td class="table_label">이메일</td>
-						<td class="table_value"><input type="text" name="email"
-							id="email"></td>
-					</tr>
-					<tr>
-						<td class="table_label">주소</td>
-						<td class="table_value"><input type="text" name="address"
-							id="address"></td>
-						<td class="table_label">상세주소</td>
-						<td class="table_value" colspan="3"><input type="text"
-							name="address_detail" id="addressDetail"></td>
-					</tr>
-				</table>
+			<div>
+				<button type="button" id="insertBtn">추가</button>
+				<button type="button" id="updateBtn">수정</button>
+				<button type="button" id="deleteBtn">삭제</button>
 			</div>
-		</footer>
-	</form>
+		</div>
+		<div class="detail_table">
+			<input type="hidden" name="customerId" id="customerId">
+			<table>
+				<tr>
+					<td class="table_label">성명</td>
+					<td class="table_value"><input type="text" name="name"
+						id="name"></td>
+					<td class="table_label">전화번호</td>
+					<td class="table_value"><input type="text" name="phone"
+						id="phone"></td>
+					<td class="table_label">이메일</td>
+					<td class="table_value"><input type="text" name="email"
+						id="email"></td>
+				</tr>
+				<tr>
+					<td class="table_label">주소</td>
+					<td class="table_value"><input type="text" name="address"
+						id="address"></td>
+					<td class="table_label">상세주소</td>
+					<td class="table_value" colspan="3"><input type="text"
+						name="address_detail" id="addressDetail"></td>
+				</tr>
+			</table>
+		</div>
+	</footer>
 	<script src="script.js"></script>
 </body>
 </html>
