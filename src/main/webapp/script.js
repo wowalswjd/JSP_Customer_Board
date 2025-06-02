@@ -22,41 +22,92 @@ document.addEventListener("DOMContentLoaded", function() {
 const updateBtn = document.getElementById("updateBtn");
 updateBtn.addEventListener("click", async function() {
 	console.log("updateBtn click!");
-	const data = {
-		action: "update",
-		customerId: document.getElementById("customerId").value,
-		name: document.getElementById("name").value,
-		phone: document.getElementById("phone").value,
-		email: document.getElementById("email").value,
-		address: document.getElementById("address").value,
-		address_detail: document.getElementById("addressDetail").value
-	};
+	const customerIdValue = document.getElementById("customerId").value;
 
-	console.log(data);
+	console.log(customerIdValue);
 
-	try {
-		const response = await fetch("mainpage.jsp", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(data)
-		});
+	if (customerIdValue) {
+		// 선택한 고객 정보가 있는 경우 (update)
+		const data = {
+			action: "update",
+			customerId: document.getElementById("customerId").value,
+			name: document.getElementById("name").value,
+			phone: document.getElementById("phone").value,
+			email: document.getElementById("email").value,
+			address: document.getElementById("address").value,
+			address_detail: document.getElementById("addressDetail").value
+		};
 
-		// DB update 결과 받아오기
-		const result = await response.json();
+		console.log(data);
 
-		if (result.message == "success") {
-			alert("수정 완료!");
-			location.reload();
-		} else {
-			alert("수정 실패!");
+		try {
+			const response = await fetch("mainpage.jsp", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			});
+
+			// DB update 결과 받아오기
+			const result = await response.json();
+
+			if (result.message == "success") {
+				alert("수정 완료!");
+				location.reload();
+			} else {
+				alert("수정 실패!");
+			}
+		} catch (error) {
+			console.error("Fetch 실패:", error);
+			alert("에러 발생!");
 		}
-	} catch (error) {
-		console.error("Fetch 실패:", error);
-		alert("에러 발생!");
+	} else {
+		// 선택한 고객 정보가 없는 경우 (insert)
+		console.log("추가 로직 시작");
+		
+		const currentUrl = new URL(window.location.href);
+		const currentParams = currentUrl.searchParams;
+		let branchIdParam = currentParams.get("branchId");
+		
+		const data = {
+			action: "insert",
+			name: document.getElementById("name").value,
+			phone: document.getElementById("phone").value,
+			email: document.getElementById("email").value,
+			address: document.getElementById("address").value,
+			address_detail: document.getElementById("addressDetail").value,
+			branch_id: branchIdParam,
+		};
+		
+		console.log(data);
+
+		try {
+			const response = await fetch("mainpage.jsp", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			});
+
+			// DB update 결과 받아오기
+			const result = await response.json();
+
+			if (result.message == "success") {
+				alert("추가 완료!");
+				location.reload();
+			} else {
+				alert("추가 실패!");
+			}
+		} catch (error) {
+			console.error("Fetch 실패:", error);
+			alert("에러 발생!");
+		}
 	}
+
 });
+
 
 /* 하단 테이블 추가 버튼 클릭 시 실행되는 이벤트 */
 const insertBtn = document.getElementById("insertBtn");
@@ -66,7 +117,14 @@ insertBtn.addEventListener("click", function() {
 
 	// 새 행(Row) 추가
 	const newRow = table.insertRow();
-	const newCell1 = newRow.insertCell(0);
+	newRow.style.height = "18.5px";
+
+	// 열(column) 수에 맞춰 빈 셀(td) 7개 생성
+	for (let i = 0; i < 7; i++) {
+		const newCell = newRow.insertCell(i);
+		newCell.textContent = " ";  // 빈 셀
+		newCell.style.height = "18.5px";
+	}
 
 	// input 모두 비우기
 	document.getElementById("customerId").value = "";
@@ -112,7 +170,7 @@ deleteBtn.addEventListener("click", async function() {
 			console.error("삭제 요청 실패:", error);
 			alert("에러 발생!");
 		}
-	} 
+	}
 });
 
 

@@ -68,6 +68,23 @@ if (branchId != null && !branchId.isEmpty()) {
                 out.print("{\"message\":\"success\"}");
                 return; 
             	
+            } else if ("insert".equals(action)) {
+            	
+                String name = (String) json.get("name");
+                String phone = (String) json.get("phone");
+                String email = (String) json.get("email");
+                String address = (String) json.get("address");
+                String addressDetail = (String) json.get("address_detail");
+               
+                
+                String currentBranchId = (String) json.get("branch_id");
+                
+                dao.insertCustomerInfo(name, phone, email, address, addressDetail, Integer.parseInt(currentBranchId));
+                
+             // script.js (insert 버튼 클릭 이벤트)에 결과 return해주기
+                response.setContentType("application/json");
+                out.print("{\"message\":\"success\"}");
+                return; 
             }
 
         } catch (ParseException e) {
