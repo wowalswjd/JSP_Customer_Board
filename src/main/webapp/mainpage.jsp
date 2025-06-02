@@ -28,25 +28,6 @@ if (branchId != null && !branchId.isEmpty()) {
 %>
 
 <%
-/* if ("POST".equalsIgnoreCase(request.getMethod())) {
-	String action = request.getParameter("action");
-
-	if ("insert".equals(action)) {
-		// insert 처리
-	} else if ("update".equals(action)) {
-		// update 처리
-		int customerId = Integer.parseInt(request.getParameter("customerId"));
-		String name = request.getParameter("name");
-		String phone = request.getParameter("phone");
-		String email = request.getParameter("email");
-		String address = request.getParameter("address");
-		String addressDetail = request.getParameter("address_detail");
-
-		dao.updateCustomerInfo(customerId, name, phone, email, address, addressDetail);
-	} else if ("delete".equals(action)) {
-		// delete 처리
-	}
-} */
 	// POST 요청일 경우 JSON 받기
     if ("POST".equalsIgnoreCase(request.getMethod())) {
         BufferedReader reader = request.getReader();
@@ -77,6 +58,16 @@ if (branchId != null && !branchId.isEmpty()) {
                 response.setContentType("application/json");
                 out.print("{\"message\":\"success\"}");
                 return;  // 더 이상 JSP 렌더링하지 않음
+            } else if ("delete".equals(action)) {
+            	int customerId = Integer.parseInt((String) json.get("customerId"));
+            	
+            	dao.deleteCustomerInfo(customerId);
+            	
+            	// script.js (delete 버튼 클릭 이벤트)에 결과 return해주기
+                response.setContentType("application/json");
+                out.print("{\"message\":\"success\"}");
+                return; 
+            	
             }
 
         } catch (ParseException e) {
@@ -126,7 +117,7 @@ if (branchId != null && !branchId.isEmpty()) {
 	</header>
 
 	<main class="main">
-		<table>
+		<table id="main_table">
 			<thead>
 				<tr>
 					<th>고객번호</th>
