@@ -53,8 +53,8 @@ updateBtn.addEventListener("click", async function() {
 			const result = await response.json();
 
 			if (result.message == "success") {
-				alert("수정 완료!");
 				location.reload();
+				alert("수정 완료!");
 			} else {
 				alert("수정 실패!");
 			}
@@ -95,8 +95,8 @@ updateBtn.addEventListener("click", async function() {
 			const result = await response.json();
 
 			if (result.message == "success") {
-				alert("추가 완료!");
 				location.reload();
+				alert("추가 완료!");
 			} else {
 				alert("추가 실패!");
 			}
@@ -118,6 +118,7 @@ insertBtn.addEventListener("click", function() {
 	// 새 행(Row) 추가
 	const newRow = table.insertRow();
 	newRow.style.height = "18.5px";
+	newRow.classList.add('table_row');
 
 	// 열(column) 수에 맞춰 빈 셀(td) 7개 생성
 	for (let i = 0; i < 7; i++) {
@@ -125,6 +126,13 @@ insertBtn.addEventListener("click", function() {
 		newCell.textContent = " ";  // 빈 셀
 		newCell.style.height = "18.5px";
 	}
+	
+	// 기존 선택된 행 있으면 선택 해제
+	const selectedRow = document.querySelector('.table_row.selected');
+	if (selectedRow) selectedRow.classList.remove('selected');
+
+	// 새로 추가한 행에 selected 클래스 추가 (파란색 효과)
+	newRow.classList.add('selected');
 
 	// input 모두 비우기
 	document.getElementById("customerId").value = "";
@@ -161,8 +169,8 @@ deleteBtn.addEventListener("click", async function() {
 			const result = await response.json();
 
 			if (result.message == "success") {
-				alert("삭제 완료!");
 				location.reload();
+				alert("삭제 완료!");
 			} else {
 				alert("삭제 실패!");
 			}
@@ -172,6 +180,20 @@ deleteBtn.addEventListener("click", async function() {
 		}
 	}
 });
+
+/* 행 클릭 시 클릭된 행 파란색으로 띄우는 이벤트 */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.table_row').forEach(row => {
+    row.addEventListener('click', () => {
+      const selectedRow = document.querySelector('.table_row.selected');
+      if (selectedRow && selectedRow !== row) {
+        selectedRow.classList.remove('selected');
+      }
+      row.classList.toggle('selected');
+    });
+  });
+});
+
 
 
 

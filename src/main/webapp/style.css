@@ -27,10 +27,21 @@ td {
     border-radius: 4px;
 }
 
+.form {
+	width: 100%;
+}
+
 .dropdown_div {
 	display: flex;
     align-items: flex-end;
     gap: 8px;
+    position: relative;
+    width: 100%;
+}
+
+.submit_btn {
+    position: absolute;
+    right: 0;
 }
 
 .main {
@@ -54,7 +65,12 @@ td {
 }
 
 .table_row:hover {
-	background-color: aliceblue;
+    background-color: aliceblue;
+}
+
+/* 클릭해서 선택된 상태 */
+.table_row.selected {
+    background-color: #a0c4ff; /* 클릭됐을 때 남아있을 색깔 */
 }
 
 

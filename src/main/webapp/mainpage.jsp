@@ -106,7 +106,7 @@ if (branchId != null && !branchId.isEmpty()) {
 <body>
 	<h2>영업점별 고객정보</h2>
 	<header class="branch">
-		<form action="mainpage.jsp" method="get">
+		<form action="mainpage.jsp" method="get" class="form">
 			<div class="dropdown_div">
 				<div>
 					<strong>> 영업점</strong>
@@ -126,7 +126,7 @@ if (branchId != null && !branchId.isEmpty()) {
 					}
 					%>
 				</select>
-				<button type="submit">조회</button>
+				<button type="submit" class="submit_btn">조회</button>
 
 
 			</div>
