@@ -31,7 +31,7 @@ SELECT * FROM branch;
 INSERT INTO branch(branch_id, branch_name) VALUES (1, "가산지점");
 INSERT INTO branch(branch_id, branch_name) VALUES (2, "일산지점");
 INSERT INTO branch(branch_id, branch_name) VALUES (3, "울산지점");
-INSERT INTO branch(branch_id, branch_name) VALUES (4, "부산지점");\
+INSERT INTO branch(branch_id, branch_name) VALUES (4, "부산지점");
 
 SELECT * FROM customer;
 
